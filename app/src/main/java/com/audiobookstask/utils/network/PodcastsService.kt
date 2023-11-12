@@ -15,4 +15,5 @@ interface PodcastsService {
     suspend fun getPodcastsDetail(
         @Path("id") id: Int, @Query("key") key: String,
     ): PodcastsModel
+
 }

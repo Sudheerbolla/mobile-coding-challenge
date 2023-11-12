@@ -19,15 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
-import com.audiobookstask.view.PodcastCard
-import com.audiobookstask.data.model.PodcastsModel
 import com.audiobookstask.R
+import com.audiobookstask.data.model.PodcastsModel
+import com.audiobookstask.view.PodcastCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PodcastsList(podcastsList: List<PodcastsModel>,
-                 /*podcastsList: LazyPagingItems<PodcastsModel>,*/ onPodcastClick: (String) -> Unit) {
+fun PodcastsList(
+    podcastsList: List<PodcastsModel>,
+    /*podcastsList: LazyPagingItems<PodcastsModel>,*/
+    onPodcastClick: (String) -> Unit
+) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Scaffold(
             topBar = {
@@ -50,13 +52,17 @@ fun PodcastsList(podcastsList: List<PodcastsModel>,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "\uD83C\uDF3F  Plants in Cosmetics",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
+                            text = "Podcasts",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
                 items(podcastsList/*.itemSnapshotList*/) {
-                    PodcastCard(it!!, onPodcastClick = { pid: String -> it.id
+                    PodcastCard(it, onPodcastClick = { pid: String ->
+                        it.id
                         onPodcastClick(pid)
                     })
                 }

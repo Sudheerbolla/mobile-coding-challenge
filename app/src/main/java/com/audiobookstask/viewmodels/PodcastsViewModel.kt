@@ -1,17 +1,37 @@
 package com.audiobookstask.viewmodels
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.audiobookstask.data.model.PodcastsModel
-import com.audiobookstask.data.repo.PodcastsRepository
-import kotlinx.coroutines.flow.Flow
+import com.audiobookstask.data.model.PodcastsResponse
+import com.audiobookstask.data.repo.PodCastRepository
+import kotlinx.coroutines.launch
 
-class PodcastsViewModel(
-    gamesRepository: PodcastsRepository,
-) : ViewModel() {
+class PodcastsViewModel() : ViewModel() {
+    private val repository = PodCastRepository()
 
-    val podcastsListState: Flow<PagingData<PodcastsModel>> =
-        gamesRepository.getAllPodcasts().cachedIn(viewModelScope)
+    private val _podCasts = MutableLiveData<PodcastsResponse>()
+    val podCasts: LiveData<PodcastsResponse> = _podCasts
+
+    fun fetchPodCasts() {
+        viewModelScope.launch {
+            try {
+                val cards = repository.getPodCasts(5)
+                _podCasts.value = cards
+            } catch (e: Exception) {
+                // Handle error
+                Log.e("Podcasts", e.message.toString());
+            }
+        }
+    }
+
+    fun getSelectedPodCastItem(id: String): PodcastsModel {
+        return podCasts.value!!.podcasts.first {
+            it.id == id
+        }
+    }
+
 }
